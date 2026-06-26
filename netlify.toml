@@ -1,0 +1,32 @@
+# ──────────────────────────────────────────────────────────────
+#  1688 Archive — Netlify deployment config
+#  This site is a single static index.html that loads React /
+#  Tailwind / Babel from CDN at runtime. There is no build step.
+# ──────────────────────────────────────────────────────────────
+
+[build]
+  # The directory to publish. "." means the same folder this
+  # netlify.toml lives in.
+  publish = "."
+
+  # No-op build. Netlify still runs this, but it does nothing.
+  command = "echo 'No build step — static HTML deployed as-is.'"
+
+
+# Long-cache the (currently only) HTML at the root with revalidation,
+# so updates appear instantly when you redeploy.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+
+# Fallback: any unknown path returns index.html with a 200.
+# Harmless now (single page) and useful if you later add client-side routes.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
